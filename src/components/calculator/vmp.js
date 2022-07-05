@@ -750,6 +750,9 @@ const vmpUrl = [{
     "name": "Скорая медицинская помощь",
     "url": "/training-programs/for-doctors/skoraya-meditsinskaya-pomoshch/skoraya-meditsinskaya-pomoshch-professionalnaya-perepodgotovka/"
 }, {
+    "name": "Судебно-медицинская экспертиза",
+    "url": "/training-programs/for-doctors/sudebno-meditsinskaya-ekspertiza/sudebno-meditsinskaya-ekspertiza-perepodgotovka/"
+}, {
     "name": "Общая гигиена",
     "url": "/training-programs/for-doctors/obshchaya-gigiena/kurs-povysheniya-kvalifikatsii-po-napravleniyu-obshchaya-gigiena/"
 }, {
@@ -785,6 +788,9 @@ const vmpUrl = [{
 }, {
     "name": "Челюстно",
     "url": "/training-programs/for-doctors/chelyustno-litsevaya-khirurgiya/kursy-povysheniya-kvalifikatsii-po-napravleniyu-chelyustno-litsevaya-khirurgiya/"
+}, {
+    "name": "Физическая и реабилитационная медицина",
+    "url": "/training-programs/for-doctors/fizicheskaya-i-reabilitatsionnaya-meditsina/fizicheskaya-i-reabilitatsionnaya-meditsina-professionalnaya-perepodgotovka/"
 }, {
     "name": "Санитарно",
     "url": "/training-programs/for-doctors/sanitarno-gigienicheskie-laboratornye-issledovaniya/kursy-povysheniya-kvalifikatsii-po-napravleniyu-sanitarno-gigienicheskie-laboratornye-issledovaniya/"

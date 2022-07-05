@@ -16,7 +16,7 @@ const smpData = () => {
         name: 'Гигиеническое воспитание',
         value: ['Лечебное дело', 'Акушерское дело', 'Сестринское дело', 'Медико-профилактическое дело']
     },
-{
+    {
         name: 'Гигиена и санитария',
         value: ['Гигиена и санитария']
     },
@@ -36,7 +36,7 @@ const smpData = () => {
         name: 'Лабораторное дело',
         value: ['Медико-профилактическое дело', 'Лабораторная диагностика']
     },
-{
+    {
         name: 'Лабораторная диагностика',
         value: ['Лабораторная диагностика']
     },
@@ -48,7 +48,7 @@ const smpData = () => {
         name: 'Медицинский массаж',
         value: ['Лечебное дело', 'Акушерское дело', 'Сестринское дело']
     },
-{
+    {
         name: 'Медицинская оптика',
         value: ['Медицинская оптика']
     },
@@ -100,15 +100,15 @@ const smpData = () => {
         name: 'Скорая и неотложная помощь',
         value: ['Лечебное дело']
     },
-{
+    {
         name: 'Стоматология',
         value: ['Стоматология']
     },
-{
+    {
         name: 'Стоматология профилактическая',
         value: ['Стоматология профилактическая']
     },
-{
+    {
         name: 'Стоматология ортопедическая',
         value: ['Стоматология ортопедическая']
     },
@@ -116,7 +116,7 @@ const smpData = () => {
         name: 'Судебно-медицинская экспертиза',
         value: ['Лабораторная диагностика']
     },
-{
+    {
         name: 'Фармация',
         value: ['Фармация']
     },
@@ -128,7 +128,7 @@ const smpData = () => {
         name: 'Функциональная диагностика',
         value: ['Лечебное дело', 'Акушерское дело', 'Сестринское дело']
     },
-{
+    {
         name: 'Эпидемиология (паразитология)',
         value: ['Медико-профилактическое дело']
     },
@@ -246,6 +246,9 @@ const smpUrl = [{
     "name": "Медико",
     "url": "/training-programs/for-nurses/mediko-sotsialnaya-pomoshch/mediko-sotsialnaya-pomoshch-povyshenie-kvalifikatsii/"
 }, {
+    "name": "Медико-социальная помощь",
+    "url": "/training-programs/for-nurses/mediko-sotsialnaya-pomoshch/mediko-sotsialnaya-pomoshch-professionalnaya-perepodgotovka/"
+}, {
     "name": "Наркология",
     "url": "/training-programs/for-nurses/narkologiya/narkologiya-professionalnaya-perepodgotovka/"
 }, {
@@ -276,10 +279,10 @@ const smpUrl = [{
     "name": "Сестринское дело в косметологии",
     "url": "/training-programs/for-nurses/sestrinskoe-delo-v-kosmetologii/sestrinskoe-delo-v-kosmetologii-povyshenie-kvalifikatsii/"
 }, {
-    "name": "Судебно",
+    "name": "Судебно-медицинская экспертиза",
     "url": "/training-programs/for-nurses/sudebno-meditsinskaya-ekspertiza/sudebno-meditsinskaya-ekspertiza-professionalnaya-perepodgotovka/"
 }, {
-    "name": "Судебно",
+    "name": "Судебно-медицинская экспертиза",
     "url": "/training-programs/for-nurses/sudebno-meditsinskaya-ekspertiza/sudebno-meditsinskaya-ekspertiza-povyshenie-kvalifikatsii-/"
 }, {
     "name": "Физиотерапия",

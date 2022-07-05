@@ -1,31 +1,32 @@
-import React from 'react'
-import { Select, Checkbox, Tabs } from 'antd'
-import type { CheckboxChangeEvent } from 'antd/es/checkbox';
+import React, { useState, useEffect } from 'react'
+import { Select, Radio, Tabs } from 'antd'
+import type { RadioChangeEvent } from 'antd';
 import smpData from './smp'
 import vmpData from './vmp'
-// import smpURL from './smp_url.json'
-// import vmpURL from './vmp_url.json'
 import './calculator.scss'
 const { TabPane } = Tabs
 const { Option } = Select
+const {arrListSMP, smpUrl} = smpData()
+const {arrListVMP, vmpUrl} = vmpData()
 
-const Calculator = () => {
+const Calculator: React.FC = () => {
 
-  const onChange = (e: CheckboxChangeEvent) => {
-    console.log(`checked = ${e.target.checked}`);
+  const [staffType, setStaffType] = useState('vmp');
+  
+
+  const onChange = (e: RadioChangeEvent) => {
+    setStaffType(e.target.value);
   };
 
-  const selectSelect = (value: string) => {
-    console.log('selected option', value)
+  // useEffect(() =>{
+  //   console.log(staffType)
+  // },[staffType])
+
+  const selectedValue = (valueObj: { value: string; label: React.ReactNode }) => {
+    const {value, label} = valueObj
+    console.log(value.split(',').slice(1));
+    console.log(label);
   }
-
-  const {arrListSMP, smpUrl} = smpData()
-  const {arrListVMP, vmpUrl} = vmpData()
-  // console.log(smpURL)
-  // console.log(vmpURL)
-  const onSelect = (value: string) => {
-    console.log(`selected ${value}`);
-  };
 
   return (
     <div className="container">
@@ -34,25 +35,56 @@ const Calculator = () => {
       </div>
       <Tabs type="card">
         <TabPane tab="Специальности, доступные с Вашим образованием" key="1d">
-          <Checkbox onChange={onChange}>Высший медицинский персонал</Checkbox>
-          <Checkbox onChange={onChange}>Средний медицинский персонал</Checkbox>
+          <Radio.Group onChange={onChange} value={staffType}>
+            <Radio value={'vmp'}>Высший медицинский персонал</Radio>
+            <Radio value={'smp'}>Средний медицинский персонал</Radio>
+          </Radio.Group>
           <Select
             showSearch
+            labelInValue
             style={{
               width: 200
             }}
             placeholder="Ваша специальность"
-            optionFilterProp="children"
-            onChange={onSelect}
+            // optionFilterProp="children"
+            // onSelect={onSelect}
+            onChange={selectedValue}
             filterOption={(input, option) =>
               (option!.children as unknown as string).toLowerCase().includes(input.toLowerCase())
             }
           >
-            {arrListSMP.map((item, index) => <Option value={item?.value} key={index}>{item?.name}</Option>)}
+            {/* Для унифицирования value добавляем название. Т.к. много совпдающих значений */}
+            {staffType === 'vmp'
+              ? arrListVMP.map((item, index) => <Option value={String(item?.name + ',' + item?.value)} key={index}>{item?.name}</Option>)
+              : arrListSMP.map((item, index) => <Option value={String(item?.name + ',' + item?.value)} key={index}>{item?.name}</Option>)
+            }
           </Select>
         </TabPane>
         <TabPane tab="Образовательные требования к специальности" key="2d">
-          Образовательные требования к специальности
+          <Radio.Group onChange={onChange} value={staffType}>
+            <Radio value={'vmp'}>Высший медицинский персонал</Radio>
+            <Radio value={'smp'}>Средний медицинский персонал</Radio>
+          </Radio.Group>
+          <Select
+            showSearch
+            labelInValue
+            style={{
+              width: 200
+            }}
+            placeholder="Ваша специальность"
+            // optionFilterProp="children"
+            // onSelect={onSelect}
+            onChange={selectedValue}
+            filterOption={(input, option) =>
+              (option!.children as unknown as string).toLowerCase().includes(input.toLowerCase())
+            }
+          >
+            {/* Для унифицирования value добавляем название. Т.к. много совпдающих значений */}
+            {staffType === 'vmp'
+              ? arrListVMP.map((item, index) => <Option value={String(item?.name + ',' + item?.value)} key={index}>{item?.name}</Option>)
+              : arrListSMP.map((item, index) => <Option value={String(item?.name + ',' + item?.value)} key={index}>{item?.name}</Option>)
+            }
+          </Select>
         </TabPane>
       </Tabs>
     </div>
