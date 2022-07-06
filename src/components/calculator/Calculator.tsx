@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useMemo } from 'react'
 import { Select, Radio, Tabs } from 'antd'
 import type { RadioChangeEvent } from 'antd';
 import smpData from './smp'
@@ -15,6 +15,11 @@ interface typeSpec {
   subvalue?: string[]
 }
 
+interface typeCourse {
+  name: string;
+  url?: string;
+}
+
 interface typeAvailableSpecialties {
   arrSpecialtiesSmp: typeSpec[];
   arrSpecialtiesVmp: typeSpec[];
@@ -22,7 +27,8 @@ interface typeAvailableSpecialties {
 
 const Calculator: React.FC = () => {
 
-  const [staffType, setStaffType] = useState('vmp');
+  const [staffType, setStaffType] = useState<'smp' | 'vmp'>('vmp');
+  const [listOfCourses, setListOfCourses] = useState<typeCourse[]>([])
 
   const onChange = (e: RadioChangeEvent) => {
     setStaffType(e.target.value);
@@ -31,16 +37,18 @@ const Calculator: React.FC = () => {
   const createArrSpecialties = (arrSpecialties: typeSpec[]) => {
     const newArrSpecList: typeSpec[] = []
     const specListObj: {[key: string]: typeSpec} = {}
+
     arrSpecialties.forEach( elem => 
       elem.value.forEach(specName => specListObj[specName]?
         specListObj[specName].value.push(elem.name) 
         : specListObj[specName] = {name: specName, value: [elem.name]}
       )
     )
-    console.log(specListObj)
+    
     for(let spec in specListObj) {
       newArrSpecList.push(specListObj[spec])
     }
+    newArrSpecList.sort((a: typeSpec, b: typeSpec) => a.name > b.name ? 1 : -1)
 
     return newArrSpecList
   }
@@ -55,69 +63,20 @@ const Calculator: React.FC = () => {
     return availableSpecialtiesObj
   }, [])
 
-  
-  // function setNewArrList(arr: []) {
-  //   let namesArr = [];
-  //   const listObj: [] = [];
-  //   (function() {
-  //     let namesArrSup: [] = [];
-  //     for (let el of arr) {
-  //       namesArrSup: [] = namesArrSup.concat(el?.value);
-  //     }
-  //     (function() {
-  //       let result: [] = [];
-  
-  //       for (let str of namesArrSup) {
-  //         if (!result.includes(str) && typeof str === 'string') {
-  //           result.push(str);
-  //         }
-  //       }
-  //       namesArr = result;
-  
-  //     })();
-  //   })();
-  //   namesArr.map((i) => {
-  
-  //     const program: [] = [];
-  //     for (let a of arr) {
-  //       const arrVal: string = a.value;
-  //       if (arrVal !== undefined) {
-  //         arrVal.map(e => {
-  //           if (e == i) program.push(a.name);
-  //         });
-  //       }
-  //     }
-  //     listObj.push({
-  //       name: i,
-  //       value: program
-  //     });
-  //   });
-  //   return listObj;
-  // }
-  
-  // function sortFunc(arr: [], name: string) {
-  //   return arr.sort(function(a, b) {
-  //     var x = a[name].toLowerCase();
-  //     var y = b[name].toLowerCase();
-  //     return x < y ? -1 : x > y ? 1 : 0;
-  //   });
-  // }
+  const setAvailableSpecialties = (arr: string[]): void => {
+    const availableSpecialties: typeCourse[] = []
+    
+    arr.forEach( (name:string) => {
+      const urlList = staffType === 'vmp' ? vmpUrl : smpUrl
+      const course: typeCourse | undefined = urlList.find((el: typeCourse) => name === el.name)
+      course && availableSpecialties.push(course)
+    })
 
-  const showAvailableSpecialties = () => {
-
+    setListOfCourses(availableSpecialties)
   }
 
-  const selectedValue = (valueObj: { value: string; label: React.ReactNode }) => {
-    const {value, label} = valueObj
-    console.log(value.split(',').slice(1));
-    console.log(label);
-    // console.log({
-    //   smp: sortFunc(setNewArrList(arrListSMP),label),
-    //   vmp: sortFunc(setNewArrList(arrListVMP),label),
-    //   smpOr: sortFunc(arrListSMP,label),
-    //   vmpOr: sortFunc(arrListVMP,label)
-    // })
-  }
+  const selectedValue = (value: string): void => 
+    setAvailableSpecialties(value.split(',').slice(1))
 
   return (
     <div className="container">
@@ -132,7 +91,6 @@ const Calculator: React.FC = () => {
           </Radio.Group>
           <Select
             showSearch
-            labelInValue
             style={{
               width: 200
             }}
@@ -147,10 +105,14 @@ const Calculator: React.FC = () => {
             {/* Для унифицирования value добавляем название. Т.к. много совпдающих значений */}
             {
               staffType === 'vmp'
-                ? memoizedAvailableSpecialtiesObj.arrSpecialtiesVmp.map((item, index) => <Option value={String(item?.name + ',' + item?.value)} key={index}>{item?.name}</Option>)
-                : memoizedAvailableSpecialtiesObj.arrSpecialtiesSmp.map((item, index) => <Option value={String(item?.name + ',' + item?.value)} key={index}>{item?.name}</Option>)
+                ? memoizedAvailableSpecialtiesObj.arrSpecialtiesVmp.map((item:typeSpec, index:number) => 
+                  <Option value={String(item.name + ',' + item.value)} key={index}>{item.name}</Option>)
+                : memoizedAvailableSpecialtiesObj.arrSpecialtiesSmp.map((item:typeSpec, index:number) => 
+                  <Option value={String(item.name + ',' + item.value)} key={index}>{item.name}</Option>)
             }
           </Select>
+          {listOfCourses.map((course:typeCourse, index:number) => 
+            <a href={course.url} key={index}>{course.name}</a>)}
         </TabPane>
         <TabPane tab="Образовательные требования к специальности" key="2d">
           <Radio.Group onChange={onChange} value={staffType}>
@@ -159,7 +121,6 @@ const Calculator: React.FC = () => {
           </Radio.Group>
           <Select
             showSearch
-            labelInValue
             style={{
               width: 200
             }}
@@ -173,10 +134,14 @@ const Calculator: React.FC = () => {
           >
             {/* Для унифицирования value добавляем название. Т.к. много совпдающих значений */}
             {staffType === 'vmp'
-              ? arrListVMP.map((item, index) => <Option value={String(item?.name + ',' + item?.value)} key={index}>{item?.name}</Option>)
-              : arrListSMP.map((item, index) => <Option value={String(item?.name + ',' + item?.value)} key={index}>{item?.name}</Option>)
+              ? arrListVMP.map((item:typeSpec, index:number) => 
+                <Option value={String(item.name + ',' + item.value)} key={index}>{item.name}</Option>)
+              : arrListSMP.map((item:typeSpec, index:number) => 
+                <Option value={String(item.name + ',' + item.value)} key={index}>{item.name}</Option>)
             }
           </Select>
+          {listOfCourses.map((course:typeCourse, index:number) => 
+            <a href={course.url} key={index}>{course.name}</a>)}
         </TabPane>
       </Tabs>
     </div>
