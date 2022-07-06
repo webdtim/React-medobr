@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { Select, Radio, Tabs } from 'antd'
 import type { RadioChangeEvent } from 'antd';
 import smpData from './smp'
@@ -23,52 +23,38 @@ interface typeAvailableSpecialties {
 const Calculator: React.FC = () => {
 
   const [staffType, setStaffType] = useState('vmp');
-  
 
   const onChange = (e: RadioChangeEvent) => {
     setStaffType(e.target.value);
   };
 
-  // useEffect(() =>{
-  //   console.log(staffType)
-  // },[staffType])
-
   const createArrSpecialties = (arrSpecialties: typeSpec[]) => {
-    // const newArray: typeSpec[] = []
+    const newArrSpecList: typeSpec[] = []
+    const specListObj: {[key: string]: typeSpec} = {}
+    arrSpecialties.forEach( elem => 
+      elem.value.forEach(specName => specListObj[specName]?
+        specListObj[specName].value.push(elem.name) 
+        : specListObj[specName] = {name: specName, value: [elem.name]}
+      )
+    )
+    console.log(specListObj)
+    for(let spec in specListObj) {
+      newArrSpecList.push(specListObj[spec])
+    }
 
-    // return newArray
-    return arrSpecialties
+    return newArrSpecList
   }
-    
-  let initDone: boolean = false
-  let availableSpecialtiesObj: typeAvailableSpecialties = {
-    arrSpecialtiesSmp: [],
-    arrSpecialtiesVmp: []
-  }
+  
+  const memoizedAvailableSpecialtiesObj = useMemo((): typeAvailableSpecialties => {
 
-  useEffect(() =>{
-    // availableSpecialtiesObj = {
-      availableSpecialtiesObj.arrSpecialtiesSmp = createArrSpecialties(arrListSMP)
-      availableSpecialtiesObj.arrSpecialtiesVmp = createArrSpecialties(arrListVMP)
-    // }
-    initDone = true
-  },[])
+    const availableSpecialtiesObj: typeAvailableSpecialties = {
+      arrSpecialtiesSmp: createArrSpecialties(arrListSMP),
+      arrSpecialtiesVmp: createArrSpecialties(arrListVMP)
+    }
 
+    return availableSpecialtiesObj
+  }, [])
 
-
-  // function sorting(arr: [], name: string) {
-  //   return arr.sort(function(a, b) {
-  //     if (a === undefined) console.log(a);
-  //     if (name) {
-  //       var x = a[name] === undefined ? a[name] : a[name].toLowerCase();
-  //       var y = b[name] === undefined ? b[name] : b[name].toLowerCase();
-  //     } else {
-  //       var x = a === undefined ? a : a.toLowerCase();
-  //       var y = b === undefined ? b : b.toLowerCase();
-  //     }
-  //     return x < y ? -1 : x > y ? 1 : 0;
-  //   });
-  // }
   
   // function setNewArrList(arr: []) {
   //   let namesArr = [];
@@ -151,7 +137,7 @@ const Calculator: React.FC = () => {
               width: 200
             }}
             placeholder="Ваша специальность"
-            // optionFilterProp="children"
+            optionFilterProp="children"
             // onSelect={onSelect}
             onChange={selectedValue}
             filterOption={(input, option) =>
@@ -160,11 +146,9 @@ const Calculator: React.FC = () => {
           >
             {/* Для унифицирования value добавляем название. Т.к. много совпдающих значений */}
             {
-            initDone && (
               staffType === 'vmp'
-                ? availableSpecialtiesObj?.arrSpecialtiesVmp.map((item, index) => <Option value={String(item?.name + ',' + item?.value)} key={index}>{item?.name}</Option>)
-                : availableSpecialtiesObj?.arrSpecialtiesSmp.map((item, index) => <Option value={String(item?.name + ',' + item?.value)} key={index}>{item?.name}</Option>)
-              )
+                ? memoizedAvailableSpecialtiesObj.arrSpecialtiesVmp.map((item, index) => <Option value={String(item?.name + ',' + item?.value)} key={index}>{item?.name}</Option>)
+                : memoizedAvailableSpecialtiesObj.arrSpecialtiesSmp.map((item, index) => <Option value={String(item?.name + ',' + item?.value)} key={index}>{item?.name}</Option>)
             }
           </Select>
         </TabPane>
